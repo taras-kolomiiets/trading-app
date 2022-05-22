@@ -3,6 +3,7 @@ import millify from "millify";
 import { Link } from "react-router-dom";
 import { Card, Row, Col, Input } from "antd";
 import { useGetCryptosQuery } from "../../services/cryptoApi";
+import Loader from "../Loader";
 
 interface ICryptocurrencies {
 	simplified?: boolean;
@@ -22,7 +23,7 @@ const Cryptocurrencies = ({ simplified }: ICryptocurrencies) => {
 		setCryptos(filteredData);
 	}, [cryptosList, searchTerm]);
 
-	if (isFetching) return <h1>Loading ...</h1>;
+	if (isFetching) return <Loader />;
 
 	return (
 		<>
@@ -45,7 +46,7 @@ const Cryptocurrencies = ({ simplified }: ICryptocurrencies) => {
 							className="crypto-card"
 							key={currency.uuid}
 						>
-							<Link to={`crypto/${currency.uuid}`}>
+							<Link to={`/crypto/${currency.uuid}`}>
 								<Card
 									title={`${currency.rank}. ${currency.name}`}
 									extra={

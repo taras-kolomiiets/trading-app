@@ -14,21 +14,28 @@ import {
 	NumberOutlined,
 	ThunderboltOutlined,
 } from "@ant-design/icons";
-import { useGetCryptoDetailsQuery } from "../../services/cryptoApi";
+import {
+	useGetCryptoDetailsQuery,
+	useGetCryptoHistoryQuery,
+} from "../../services/cryptoApi";
 import LineChart from "../LineChart";
+import Loader from "../Loader";
 
 const CryptoDetails = () => {
 	const { Title, Text } = Typography;
 	const { Option } = Select;
 	const { coinId } = useParams();
-	const [timePeriod, setTimePeriod] = useState("7d");
+	const [timePeriod, setTimePeriod] = useState("24h");
 
 	const { data: coinDetails, isFetching } = useGetCryptoDetailsQuery(
 		coinId as string
 	);
-	const cryptoDetails = coinDetails?.data?.coin;
+	const { data: coinHistory } = useGetCryptoHistoryQuery({
+		coinId,
+		timePeriod,
+	});
 
-	console.log(cryptoDetails);
+	const cryptoDetails = coinDetails?.data?.coin;
 
 	const time = ["3h", "24h", "7d", "30d", "3m", "1y", "3y", "5y"];
 
@@ -71,7 +78,6 @@ const CryptoDetails = () => {
 			icon: <TrophyOutlined />,
 		},
 	];
-
 	const genericStats = [
 		{
 			title: "Number Of Markets",
@@ -116,7 +122,7 @@ const CryptoDetails = () => {
 		},
 	];
 
-	if (isFetching) return <div>Loading...</div>;
+	if (isFetching) return <Loader />;
 	return (
 		<Col className="coin-detail-container">
 			<Col className="coin-heading-container">
@@ -129,7 +135,7 @@ const CryptoDetails = () => {
 				</p>
 			</Col>
 			<Select
-				defaultValue="7d"
+				defaultValue="24h"
 				className="select-timeperiod"
 				placeholder="Select Time Period"
 				onChange={(value) => setTimePeriod(value)}
@@ -138,11 +144,15 @@ const CryptoDetails = () => {
 					<Option key={date}>{date}</Option>
 				))}
 			</Select>
-			{/* <LineChart
-				coinHistory={coinHistory}
-				currentPrice={millify(cryptoDetails?.price)}
-				coinName={millify(cryptoDetails?.name)}
-			/> */}
+			<LineChart
+				coinHistory={coinHistory ? coinHistory : {}}
+				currentPrice={
+					cryptoDetails?.price
+						? millify(cryptoDetails?.price)
+						: cryptoDetails?.price
+				}
+				coinName={cryptoDetails?.name}
+			/>
 			<Col className="stats-container">
 				<Col className="coin-value-statistics">
 					<Col className="coin-value-statistics-heading">

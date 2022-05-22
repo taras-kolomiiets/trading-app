@@ -4,6 +4,7 @@ import moment from "moment";
 import { useGetCryptoNewsQuery } from "../../services/cryptoNewsApi";
 import demoImage from "../../images/demoImage.jpg";
 import { useGetCryptosQuery } from "../../services/cryptoApi";
+import Loader from "../Loader";
 
 interface INews {
 	simplified?: boolean;
@@ -19,7 +20,7 @@ const News = ({ simplified }: INews) => {
 	const { Text, Title } = Typography;
 	const { Option } = Select;
 
-	if (!cryptoNews?.value) return <h1>Loading ...</h1>;
+	if (!cryptoNews?.value) return <Loader />;
 
 	return (
 		<Row gutter={[24, 24]}>

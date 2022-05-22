@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useGetCryptosQuery } from "../../services/cryptoApi";
 import Cryptocurrencies from "../Cryptocurrencies";
 import News from "../News";
+import Loader from "../Loader";
 
 const HomePage = () => {
 	const { data, isFetching } = useGetCryptosQuery(10);
@@ -12,7 +13,7 @@ const HomePage = () => {
 
 	const { Title } = Typography;
 
-	if (isFetching) return <h1>"Loading ..."</h1>;
+	if (isFetching) return <Loader />;
 
 	return (
 		<>
